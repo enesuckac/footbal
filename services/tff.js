@@ -3,7 +3,11 @@ const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
 
 const TFF_HOME_URL = "https://www.tff.org/default.aspx";
-const TFF_STANDINGS_URL = "https://www.tff.org/Default.aspx?pageId=198";
+const TFF_STANDINGS_URL_CANDIDATES = [
+  "https://www.tff.org/default.aspx?pageId=198",
+  "https://www.tff.org/Default.aspx?pageId=198&hafta=22",
+  "https://www.tff.org/Default.aspx?pageId=198",
+];
 const LEAGUE_CACHE_TTL_MS = 10 * 60 * 1000;
 const RETRY_DELAYS_MS = [450, 900, 1600, 2600];
 
@@ -12,8 +16,6 @@ const SPONSOR_STOP_WORDS = new Set([
   "s",
   "as",
   "futbol",
-  "kulubu",
-  "kulubu",
   "kulubu",
   "spor",
   "com",
@@ -336,18 +338,20 @@ async function tryFetchDetailedStandingsHtml() {
   let cookieHeader = initialHome.cookieHeader;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt += 1) {
-    const detailResponse = await requestTffPage(TFF_STANDINGS_URL, cookieHeader);
-    const isValidDetail =
-      detailResponse.status === 200 &&
-      !isRequestRejected(detailResponse.html) &&
-      detailResponse.html.includes("Puan Cetveli") &&
-      detailResponse.html.length > 10_000;
+    for (const detailUrl of TFF_STANDINGS_URL_CANDIDATES) {
+      const detailResponse = await requestTffPage(detailUrl, cookieHeader);
+      const isValidDetail =
+        detailResponse.status === 200 &&
+        !isRequestRejected(detailResponse.html) &&
+        detailResponse.html.includes("Puan Cetveli") &&
+        detailResponse.html.length > 10_000;
 
-    if (isValidDetail) {
-      return {
-        homepageHtml: initialHome.html,
-        detailedHtml: detailResponse.html,
-      };
+      if (isValidDetail) {
+        return {
+          homepageHtml: initialHome.html,
+          detailedHtml: detailResponse.html,
+        };
+      }
     }
 
     if (attempt >= RETRY_DELAYS_MS.length) {
