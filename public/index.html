@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Süper Lig Maç Önü Karşılaştırma Kartı</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero__headline">
+          <p class="hero__kicker">Trendyol Süper Lig</p>
+          <h1>Maç Önü İki Takım Karşılaştırma Kartı</h1>
+          <p class="hero__subtitle">
+            Transfermarkt + TFF veri katmanını birleştirerek maç öncesi karar
+            desteği sunan modern karşılaştırma paneli.
+          </p>
+        </div>
+        <form class="hero__controls" id="compareForm">
+          <label class="control">
+            <span>Ev Sahibi</span>
+            <select id="homeTeamSelect" required></select>
+          </label>
+          <label class="control">
+            <span>Deplasman</span>
+            <select id="awayTeamSelect" required></select>
+          </label>
+          <button type="submit" class="btn-primary">Kartı Güncelle</button>
+        </form>
+      </header>
+
+      <main class="dashboard" id="dashboard" hidden>
+        <section class="duel-card">
+          <article class="team-panel" id="homePanel"></article>
+          <div class="versus">
+            <p class="versus__label">Karşılaşma</p>
+            <p class="versus__value">VS</p>
+            <p class="versus__date" id="generatedAtText"></p>
+          </div>
+          <article class="team-panel" id="awayPanel"></article>
+        </section>
+
+        <section class="insights">
+          <article class="insight-card">
+            <header>
+              <h2>Kritik Kıyas Metrikleri</h2>
+              <p>Kazanım farkı barları (yüksek skor avantajlı)</p>
+            </header>
+            <div class="stat-bars" id="comparisonRows"></div>
+          </article>
+
+          <article class="insight-card">
+            <header>
+              <h2>En Değerli Oyuncular</h2>
+              <p>Transfermarkt kadro değerine göre ilk 3 oyuncu</p>
+            </header>
+            <div class="top-player-columns">
+              <div>
+                <h3 id="homePlayersTitle"></h3>
+                <ul id="homePlayersList"></ul>
+              </div>
+              <div>
+                <h3 id="awayPlayersTitle"></h3>
+                <ul id="awayPlayersList"></ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="insight-card">
+            <header>
+              <h2>Kaynaklar ve Veri Durumu</h2>
+              <p>Hangi veri nereden geldi, son güncelleme zamanı</p>
+            </header>
+            <ul id="sourceList" class="source-list"></ul>
+            <div id="warningBox" class="warning-box" hidden></div>
+          </article>
+        </section>
+      </main>
+
+      <section class="state state--loading" id="loadingState" hidden>
+        <div class="spinner"></div>
+        <p>Kart verileri hazırlanıyor...</p>
+      </section>
+
+      <section class="state state--error" id="errorState" hidden>
+        <h2>Veri alınamadı</h2>
+        <p id="errorMessage"></p>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
