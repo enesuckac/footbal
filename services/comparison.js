@@ -28,6 +28,9 @@ function formatNumber(value, digits = 0) {
 }
 
 function getRecentFormScore(recentForm) {
+  if (!Array.isArray(recentForm) || !recentForm.length) {
+    return null;
+  }
   return (recentForm || []).reduce((score, result) => {
     if (result === "W") {
       return score + 3;
@@ -162,7 +165,9 @@ function buildComparison(homeTeam, awayTeam, homeTransfermarkt, awayTransfermark
       formatter: (value) => formatNumber(value, 1),
       higherIsBetter: false,
     },
-  ].map((config) => calculateComparisonRow(config, homeSnapshot, awaySnapshot));
+  ]
+    .map((config) => calculateComparisonRow(config, homeSnapshot, awaySnapshot))
+    .filter((row) => Number.isFinite(row.homeValue) || Number.isFinite(row.awayValue));
 
   return {
     generatedAt: new Date().toISOString(),

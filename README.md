@@ -4,9 +4,9 @@ Bu proje, Süper Lig takımları için **iki takım karşılaştırmalı maç ö
 Arayüz modern bir infografik panel olarak tasarlandı ve veri katmanı iki kaynağa ayrıldı:
 
 - **Transfermarkt:** kadro piyasa değeri, yaş ortalaması, transfer bilançosu, en değerli oyuncular.
-- **TFF:** lig performans metrikleri (puan, form, gol, possession, PPDA vb).
+- **TFF:** resmi puan cetveli + fikstür (puan, sıra, maç, galibiyet, beraberlik, mağlubiyet, gol, son form).
 
-> Not: TFF canlı endpoint tanımlı değilse uygulama otomatik olarak fallback veriyle çalışır.
+> Not: Varsayılan olarak TFF resmi web kaynağından canlı çekim yapılır.
 
 ---
 
@@ -32,9 +32,9 @@ Uygulama: `http://localhost:3000`
 
 ---
 
-## TFF Entegrasyonu (Opsiyonel)
+## Özel TFF API Entegrasyonu (Opsiyonel)
 
-Canlı TFF verisi kullanmak için environment değişkenleri:
+Varsayılan TFF web scraping yerine kendi TFF API endpoint'ini kullanmak istersen:
 
 ```bash
 TFF_API_BASE_URL=https://<senin-tff-api-adresin>
@@ -77,5 +77,6 @@ Beklenen örnek endpoint:
 ## Notlar
 
 - Transfermarkt erişiminde anti-bot/erişim kısıtı olursa endpoint, arayüzü kırmamak için fallback döner.
-- TFF canlı API tanımlanmadığında `TFF Fallback` veri katmanı devreye girer.
+- TFF tarafında önce resmi `Default.aspx?pageId=198` puan/fikstür sayfası denenir, engel olduğunda anasayfadaki resmi puan durumu modülüne düşülür.
+- TFF'de bulunmayan metrikler (ör. possession, PPDA) bilinçli olarak `N/A` bırakılır; uydurma değer üretilmez.
 - Geriye dönük uyumluluk için `TIF_API_BASE_URL` ve `TIF_API_KEY` değişkenleri de desteklenir.
